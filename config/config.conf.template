@@ -5,7 +5,7 @@ logfile = ./chasr.log
 
 # Log level of the gps tracker.
 # valid log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
-loglevel = DEBUG
+loglevel = INFO
 
 [server]
 
