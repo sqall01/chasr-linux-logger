@@ -1,0 +1,43 @@
+[general]
+
+# Location of the gps tracker log file.
+logfile = ./chasr.log
+
+# Log level of the gps tracker.
+# valid log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+loglevel = DEBUG
+
+[server]
+
+# Username for the ChasR service.
+username = email@alertr.de
+
+# Password for the ChasR service.
+password = <SECRET>
+
+# Secret used to encrypt the gps data.
+secret = <mysecret>
+
+[gps]
+
+# Device name.
+name = test
+
+# Interval in which the client should submit the collected gps data.
+submissioninterval = 10
+
+# Interval in which the client should get the current gps position.
+gpslogginginterval = 3
+
+# The client will sync the filesystem everytime a
+# crucial write to the filesystem is made if this option is activated.
+# This will force the OS to write all data changes down to the filesystem.
+# This is done to assure that the data is stored on the filesystem
+# and so the integrity of the gps data is given. This option should be
+# used if the client often loses its powersupply and therefore
+# the OS has no time to sync the filesystem during a normal shutdown process.
+# For example if you use this client on a Raspberry Pi in your car and the
+# Raspberry Pi gets only power if the engine is turned on, the Raspberry Pi
+# loses its powersupply everytime the engine is turned off. This will
+# result in data loss if this option is deactivated.
+syncalways = true
