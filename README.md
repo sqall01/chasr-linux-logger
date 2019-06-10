@@ -16,6 +16,8 @@ Additionally, the ChasR GPS Tracking System can be used as part of the [AlertR A
 
 This is Linux logger for the ChasR GPS Tracking System. Its task is to gather the location data, encrypt it locally on the device and submit it to the ChasR server. It is written in Python3 and uses the gpsd provided on most Linux distributions.
 
+A picture of a temporary test logging setting with a Raspberry Pi:
+![Raspberry Pi Setting](img/pi_setting.jpg)
 
 ## Install
 
