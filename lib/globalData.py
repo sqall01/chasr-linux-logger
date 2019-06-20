@@ -9,6 +9,7 @@
 
 import threading
 
+
 class GlobalData(object):
 
     def __init__(self):

@@ -17,6 +17,7 @@ import datetime
 import calendar
 from gps3 import gps3
 
+
 class DataCollector(threading.Thread):
 
     def __init__(self, global_data):

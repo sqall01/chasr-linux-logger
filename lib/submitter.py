@@ -18,12 +18,15 @@ import ctypes
 import hashlib
 from Crypto.Cipher import AES
 
+
 class ErrorCodes:
     NO_ERROR = 0
     DATABASE_ERROR = 1
     AUTH_ERROR = 2
     ILLEGAL_MSG_ERROR = 3
     SESSION_EXPIRED = 4
+    ACL_ERROR = 5
+
 
 class DataSubmitter(threading.Thread):
 
@@ -243,6 +246,10 @@ class DataSubmitter(threading.Thread):
                     logging.error("[%s] Failed to submit gps data. "
                                   % self.file_name
                                   + "Server has a database error.")
+                    if "msg" in request_result.keys():
+                        logging.error("[%s] Server message: %s"
+                                      % (self.file_name,
+                                        request_result["msg"]))
                     break
 
                 # Authentication error.
@@ -250,6 +257,10 @@ class DataSubmitter(threading.Thread):
                     logging.error("[%s] Failed to submit gps data. "
                                   % self.file_name
                                   + "Authentication failed.")
+                    if "msg" in request_result.keys():
+                        logging.error("[%s] Server message: %s"
+                                      % (self.file_name,
+                                        request_result["msg"]))
                     break
 
                 # Illegal message error.
@@ -257,6 +268,10 @@ class DataSubmitter(threading.Thread):
                     logging.error("[%s] Failed to submit gps data. "
                                   % self.file_name
                                   + "Message illegal.")
+                    if "msg" in request_result.keys():
+                        logging.error("[%s] Server message: %s"
+                                      % (self.file_name,
+                                        request_result["msg"]))
                     break
 
                 # Session expired error.
@@ -264,6 +279,21 @@ class DataSubmitter(threading.Thread):
                     logging.error("[%s] Failed to submit gps data. "
                                   % self.file_name
                                   + "Session expired.")
+                    if "msg" in request_result.keys():
+                        logging.error("[%s] Server message: %s"
+                                      % (self.file_name,
+                                        request_result["msg"]))
+                    break
+
+                # Request not allowed (e.g., no device slots left).
+                elif request_result["code"] == ErrorCodes.ACL_ERROR:
+                    logging.error("[%s] Failed to submit gps data. "
+                                  % self.file_name
+                                  + "ACL error.")
+                    if "msg" in request_result.keys():
+                        logging.error("[%s] Server message: %s"
+                                      % (self.file_name,
+                                        request_result["msg"]))
                     break
 
                 # Unknown error.
@@ -272,6 +302,10 @@ class DataSubmitter(threading.Thread):
                                   % self.file_name
                                   + "Unknown error: %d."
                                   % request_result["code"])
+                    if "msg" in request_result.keys():
+                        logging.error("[%s] Server message: %s"
+                                      % (self.file_name,
+                                        request_result["msg"]))
                     break
 
     # Sets exit flag.
