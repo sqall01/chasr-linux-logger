@@ -49,7 +49,7 @@ GPSD_OPTIONS=""
 The Linux logger needs furthermore some packages provided by pip, which can be installed via the following command:
 
 ```bash
-root@towel:~# pip3 install request
+root@towel:~# pip3 install requests
 root@towel:~# pip3 install gps3
 root@towel:~# pip3 install pycrypto
 ```
