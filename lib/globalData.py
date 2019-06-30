@@ -18,6 +18,7 @@ class GlobalData(object):
         self.username = None
         self.password = None
         self.server = "https://alertr.de/chasr/submit.php"
+        self.verify_cert = True
 
         # Secret for gps data encryption.
         self.secret = None

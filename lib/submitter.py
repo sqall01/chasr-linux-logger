@@ -17,6 +17,7 @@ import json
 import ctypes
 import hashlib
 from Crypto.Cipher import AES
+from Crypto.Hash import HMAC, SHA256
 
 
 class ErrorCodes:
@@ -48,6 +49,7 @@ class DataSubmitter(threading.Thread):
         self.password = self.global_data.password
         self.server = self.global_data.server
         self.device_name = self.global_data.device_name
+        self.verify_cert = self.global_data.verify_cert
 
         # Gps data.
         self.gps_data = self.global_data.gps_data
@@ -86,6 +88,32 @@ class DataSubmitter(threading.Thread):
 
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         return cipher.encrypt(padded_data)
+
+    # Create auth tag for data.
+    def get_auth_tag(self, device_name, utctime, lat, lon, alt, speed):
+
+        hmac = HMAC.new(self.key, digestmod=SHA256)
+
+        # Convert to bytes if string.
+        if type(device_name) == str:
+            device_name = device_name.encode("utf-8")
+        if type(lat) == str:
+            lat = lat.encode("utf-8")
+        if type(lon) == str:
+            lon = lon.encode("utf-8")
+        if type(alt) == str:
+            alt = alt.encode("utf-8")
+        if type(speed) == str:
+            speed = speed.encode("utf-8")
+        utctime = str(utctime).encode("utf-8")
+
+        hmac.update(device_name)
+        hmac.update(utctime)
+        hmac.update(lat)
+        hmac.update(lon)
+        hmac.update(alt)
+        hmac.update(speed)
+        return hmac.hexdigest()
 
     def run(self):
 
@@ -131,6 +159,15 @@ class DataSubmitter(threading.Thread):
                     data_point["device_name"] = self.device_name
                     data_point["utctime"] = data["utctime"]
 
+                    # Create auth tag for data.
+                    auth_tag = self.get_auth_tag(self.device_name,
+                                                 data["utctime"],
+                                                 data["lat"],
+                                                 data["lon"],
+                                                 data["alt"],
+                                                 data["speed"])
+                    data_point["authtag"] = auth_tag
+
                     # Encrypt gps data.
                     enc_lat = self.encrypt_data(iv, data["lat"])
                     enc_lon = self.encrypt_data(iv, data["lon"])
@@ -155,6 +192,13 @@ class DataSubmitter(threading.Thread):
                                           + "Skipping gps position.")
                             skip = True
                             break
+                    if len(data_point["authtag"]) != 64:
+                        logging.error("[%s] Length error during "
+                                      % self.file_name
+                                      + "auth tag creation. "
+                                      + "Skipping gps position.")
+                        skip = True
+                        break
                     if skip:
                         continue
 
@@ -169,7 +213,7 @@ class DataSubmitter(threading.Thread):
                 r = None
                 try:
                     r = requests.post(self.server,
-                                      verify=True,
+                                      verify=self.verify_cert,
                                       data=payload)
                 except:
                     logging.exception("[%s] Failed to send POST request."
