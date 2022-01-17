@@ -17,7 +17,7 @@ class GlobalData(object):
         # Settings for ChasR server.
         self.username = None
         self.password = None
-        self.server = "https://alertr.de/chasr/submit.php"
+        self.server = None
         self.verify_cert = True
 
         # Secret for gps data encryption.
