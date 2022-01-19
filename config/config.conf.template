@@ -9,6 +9,9 @@ loglevel = INFO
 
 [server]
 
+# ChasR server location pointing to the submit.php file
+location = https://alertr.de/chasr/submit.php
+
 # Username for the ChasR service.
 username = email@alertr.de
 

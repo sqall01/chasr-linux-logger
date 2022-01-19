@@ -132,6 +132,7 @@ if __name__ == '__main__':
 
     # Parse settings from config file.
     try:
+        global_data.server = config.get("server", "location")
         global_data.username = config.get("server", "username")
         global_data.password = config.get("server", "password")
         global_data.secret = config.get("server", "secret")
