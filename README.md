@@ -66,7 +66,7 @@ The Linux logger needs furthermore some packages provided by pip, which can be i
 ```bash
 root@towel:~# pip3 install requests
 root@towel:~# pip3 install gps3
-root@towel:~# pip3 install pycrypto
+root@towel:~# pip3 install pycryptodome
 ```
 
 Next the ChasR Linux Logger has to be configured. Rename the configuration template file `config/config.conf.template` to `config/config.conf` and insert the needed information into it. The most important settings that have to be set are the [ChasR username and password](https://alertr.de/register), the secret (which is the key used to encrypt the GPS data) and the device name.

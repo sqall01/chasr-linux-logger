@@ -73,18 +73,13 @@ class DataSubmitter(threading.Thread):
         self.key = sha256.digest()
 
     # Encrypt gps data.
-    def encrypt_data(self, iv, data):
-
-        # Handle str and bytes.
-        if type(data) == str:
-            padded_data = data
-        else:
-            padded_data = data.decode("utf-8")
+    def encrypt_data(self, iv: bytes, data: str):
 
         # Pad data in PKCS#7.
+        padded_data = data.encode("utf-8")
         padding = 16 - (len(padded_data) % 16)
         for i in range(padding):
-            padded_data += chr(padding)
+            padded_data += chr(padding).encode("utf-8")
 
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         return cipher.encrypt(padded_data)
